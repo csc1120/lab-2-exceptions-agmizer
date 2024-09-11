@@ -2,7 +2,7 @@
 
 ## [Link to Lab 2 assignment](https://csse.msoe.us/csc1020/lab2)
 
-* [ ] Commit 1 **Die class**
+* [x] Commit 1 **Die class**
     - Implement the `Die` class
     - Implement the `DieNotRolledException` class
 * [ ] Commit 2 **User input and Die creation**
