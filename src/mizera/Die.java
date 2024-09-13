@@ -20,7 +20,7 @@ public class Die {
     /**
      * Maximum sides of die
      */
-    public static final int MAX_SIDES = 2;
+    public static final int MAX_SIDES = 100;
 
     private int currentValue;
     private final int numSides;
@@ -39,7 +39,7 @@ public class Die {
             this.numSides = numSides;
         }
         this.random = new Random();
-        roll();
+        //roll();
     }
 
     /**
@@ -59,7 +59,14 @@ public class Die {
      * attaches the value to 'currentValue'
      */
     public void roll(){
-        currentValue = random.nextInt(MIN_SIDES, MAX_SIDES) + 1;
+        boolean isValid = false;
+        while(!isValid){
+            currentValue = random.nextInt(MIN_SIDES, MAX_SIDES) + 1;
+
+            if(currentValue <= numSides * 2 && currentValue > 2){
+                isValid = true;
+            }
+        }
     }
 
 
