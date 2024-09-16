@@ -39,7 +39,6 @@ public class Die {
             this.numSides = numSides;
         }
         this.random = new Random();
-        //roll();
     }
 
     /**
@@ -48,7 +47,7 @@ public class Die {
      * @throws DieNotRolledException if die not in expected range
      */
     public int getCurrentValue(){
-        if(currentValue < MIN_SIDES || currentValue > MAX_SIDES){
+        if(currentValue < 1 || currentValue > numSides){
             throw new DieNotRolledException();
         }
         return currentValue;
@@ -59,14 +58,7 @@ public class Die {
      * attaches the value to 'currentValue'
      */
     public void roll(){
-        boolean isValid = false;
-        while(!isValid){
-            currentValue = random.nextInt(MIN_SIDES, MAX_SIDES) + 1;
-
-            if(currentValue <= numSides * 2 && currentValue > 2){
-                isValid = true;
-            }
-        }
+        currentValue = random.nextInt(numSides) + 1;
     }
 
 

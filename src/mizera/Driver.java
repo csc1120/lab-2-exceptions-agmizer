@@ -34,16 +34,10 @@ public class Driver {
     public static void main(String[] args) {
         int[] diceInput = getInput();
         Die[] dice = createDice(diceInput[0], diceInput[1]);
-        int[] holder = new int[diceInput[1] * diceInput[0] - 1];
+        int[] rolls = rollDice(dice, diceInput[1], diceInput[2]);
+        int max = findMax(rolls);
 
-        for(int i = 0; i < diceInput[0] + 1; i++){
-            dice[i].roll();
-            for(int j = 0; i < holder.length + 1; j++){
-                if(dice[i].getCurrentValue() == j + 1){
-                    holder[j] += 1;
-                }
-            }
-        }
+        report(diceInput[0], rolls, max);
     }
 
     private static int[] getInput(){
@@ -69,15 +63,21 @@ public class Driver {
                     if(holder[0] > MAX_DICE || holder[0] < MIN_DICE){
                         System.out.println("Invalid Input: Not within the dice boundary");
                     } else if(holder[1] < MIN_SIDES || holder[1] > MAX_SIDES){
-                        System.out.println(STR."Bad die creation: Illegal number of sides: \{holder[1]}");
+                        System.out.println("Bad die creation: Illegal number of sides: "
+                                           + holder[1]);
+                    } else if (holder[2] <= 0){
+                        System.out.println("Cannot roll 0 or less times");
                     }
                 } else{
-                    System.out.println(STR."Expected 3 values but only recieved \{numberArray.length}");
+                    System.out.println("Expected 3 values but only recieved "
+                                       + numberArray.length);
                 }
 
                 if(holder[0] <= MAX_DICE && holder[0] >= MIN_DICE){
                     if(holder[1] >= MIN_SIDES && holder[1] <= MAX_SIDES){
-                        isValid = true;
+                        if(holder[2] > 0){
+                            isValid = true;
+                        }
                     }
                 }
             } catch(NumberFormatException e){
@@ -94,5 +94,53 @@ public class Driver {
             dieArray[i] = new Die(numSides);
         }
         return dieArray;
+    }
+
+    private static int[] rollDice(Die[] dice, int numSides, int numRolls){
+        int[] holder = new int[(numSides * dice.length) - dice.length + 1];
+        int value = 0;
+        for(int i = 0; i < numRolls; i++){
+            for (Die die : dice) {
+                die.roll();
+                value += die.getCurrentValue();
+            }
+            for(int j = 0; j < holder.length + 1; j++){
+                if(value == j + dice.length){
+                    holder[j] += 1;
+                }
+            }
+            value = 0;
+        }
+        return holder;
+    }
+
+    private static int findMax(int[] rolls){
+        int max = rolls[0];
+        for (int roll : rolls) {
+            if(roll > max){
+                max = roll;
+            }
+        }
+        return max;
+    }
+
+    private static void report(int numDice, int[] rolls, int max){
+        final int ten = 10;
+        int numStars;
+        double scale = (double)max / ten;
+
+        for(int i = 0; i < rolls.length; i++){
+            if((i + numDice) >= ten){
+                System.out.printf("%2d:%-9d", i + numDice, rolls[i]);
+            } else{
+                System.out.printf("%d :%-9d", i + numDice, rolls[i]);
+            }
+            numStars = (int)(rolls[i] / scale);
+
+            for(int j = 0; j < numStars; j++){
+                System.out.print("*");
+            }
+            System.out.println();
+        }
     }
 }
