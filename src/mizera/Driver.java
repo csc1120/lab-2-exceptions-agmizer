@@ -7,6 +7,7 @@
  */
 package mizera;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -43,6 +44,7 @@ public class Driver {
     private static int[] getInput(){
         Scanner in = new Scanner(System.in);
         int[] holder = new int[3];
+        ArrayList<String> list;
         boolean isValid = false;
 
         System.out.println("""
@@ -53,7 +55,8 @@ public class Driver {
             try{
                 System.out.print("\nEnter configuration: ");
                 String numbers = in.nextLine();
-                String[] numberArray = numbers.split(" ", 3);
+                String[] numberArray = numbers.trim().split(" ", 3);
+                list = new ArrayList<>();
 
                 if(numberArray.length == 3){
                     for(int i = 0; i < numberArray.length; i++){
@@ -61,16 +64,30 @@ public class Driver {
                     }
 
                     if(holder[0] > MAX_DICE || holder[0] < MIN_DICE){
-                        System.out.println("Invalid Input: Not within the dice boundary");
+                        System.out.println("Invalid Input: Not within the dice boundary. "
+                                           + "2 <= x >= 10");
                     } else if(holder[1] < MIN_SIDES || holder[1] > MAX_SIDES){
+                        //Cannot use String template or checkstyle error occurs
                         System.out.println("Bad die creation: Illegal number of sides: "
                                            + holder[1]);
                     } else if (holder[2] <= 0){
                         System.out.println("Cannot roll 0 or less times");
                     }
                 } else{
-                    System.out.println("Expected 3 values but only recieved "
-                                       + numberArray.length);
+                    for (String s : numberArray) {
+                        if (!s.isEmpty() && !s.equals(" ")) {
+                            Integer.parseInt(s);
+                            list.add(s);
+                        }
+                    }
+
+                    //Cannot use String template or checkstyle error occurs
+                    if(!list.isEmpty()){
+                        System.out.println("Expected 3 values but only received "
+                                + list.size());
+                    } else{
+                        System.out.println("Invalid input");
+                    }
                 }
 
                 if(holder[0] <= MAX_DICE && holder[0] >= MIN_DICE){
@@ -81,7 +98,8 @@ public class Driver {
                     }
                 }
             } catch(NumberFormatException e){
-                System.out.println("Invalid Input: All values must be whole numbers\n");
+                System.out.println("Invalid Input. Must be 3 whole numbers " +
+                                   "with one space in between each");
             }
         }
 
